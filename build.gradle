@@ -18,10 +18,30 @@ repositories {
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    // Spring WebFlux
+    implementation("org.springframework.boot:spring-boot-starter-webflux")
+
+    // Spring Data R2DBC
+    implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
+
+    // H2 Database (R2DBC driver and runtime database)
+    implementation("io.r2dbc:r2dbc-h2")
+    runtimeOnly("com.h2database:h2")
+
+    // Lombok
+    compileOnly("org.projectlombok:lombok")
+    annotationProcessor("org.projectlombok:lombok")
+
+    // Validation (opcional, para DTOs si se desea)
+    // implementation("org.springframework.boot:spring-boot-starter-validation")
+
+    // Testing
+    testImplementation("org.springframework.boot:spring-boot-starter-test") {
+        exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
+    }
+    testImplementation("io.projectreactor:reactor-test")
+    testImplementation("org.mockito:mockito-core")
+    testImplementation("org.mockito:mockito-junit-jupiter")
 }
 
 tasks.named('test') {
