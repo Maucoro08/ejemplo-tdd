@@ -1,49 +1,49 @@
 plugins {
-	id 'java'
-	id 'org.springframework.boot' version '3.5.0'
-	id 'io.spring.dependency-management' version '1.1.7'
+    id 'java'
+    id 'org.springframework.boot' version '3.5.0'
+    id 'io.spring.dependency-management' version '1.1.7'
 }
 
 group = 'com.example'
 version = '0.0.1-SNAPSHOT'
 
 java {
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(17)
-	}
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
     // Spring WebFlux
-    implementation("org.springframework.boot:spring-boot-starter-webflux")
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
 
     // Spring Data R2DBC
-    implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
+    implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'
 
     // H2 Database (R2DBC driver and runtime database)
-    implementation("io.r2dbc:r2dbc-h2")
-    runtimeOnly("com.h2database:h2")
+    implementation 'io.r2dbc:r2dbc-h2'
+    runtimeOnly 'com.h2database:h2'
 
     // Lombok
-    compileOnly("org.projectlombok:lombok")
-    annotationProcessor("org.projectlombok:lombok")
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
 
     // Validation (opcional, para DTOs si se desea)
-    // implementation("org.springframework.boot:spring-boot-starter-validation")
+    // implementation 'org.springframework.boot:spring-boot-starter-validation'
 
     // Testing
-    testImplementation("org.springframework.boot:spring-boot-starter-test") {
-        exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
-    testImplementation("io.projectreactor:reactor-test")
-    testImplementation("org.mockito:mockito-core")
-    testImplementation("org.mockito:mockito-junit-jupiter")
+    testImplementation 'io.projectreactor:reactor-test'
+    testImplementation 'org.mockito:mockito-core'
+    testImplementation 'org.mockito:mockito-junit-jupiter'
 }
 
 tasks.named('test') {
-	useJUnitPlatform()
+    useJUnitPlatform()
 }
