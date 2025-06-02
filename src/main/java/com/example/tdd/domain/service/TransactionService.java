@@ -53,16 +53,17 @@ public class TransactionService {
                 return transactionHistoryRepository.save(historyRecord)
                     .doOnSuccess(savedHistory -> log.info("History record created for transaction {}: {}", transactionId, savedHistory.getId()))
                     .doOnError(e -> log.error("Failed to save transaction history for transaction ID: {}", transactionId, e))
-                    .then(transactionRepository.updateStatus(transactionId, TransactionStatus.CANCELLED))
-                    .doOnSuccess(updateCount -> {
-                        if (updateCount > 0) {
-                            log.info("Transaction {} status updated to CANCELLED.", transactionId);
-                        } else {
-                            // Esto no debería ocurrir si findById tuvo éxito y la transacción existe.
-                            log.error("Failed to update status for transaction ID: {}. Update count was {}.", transactionId, updateCount);
-                            // Se podría lanzar una excepción específica aquí si updateCount es 0 después de un find exitoso.
-                        }
-                    })
+                    .flatMap(savedHistory -> transactionRepository.updateStatus(transactionId, TransactionStatus.CANCELLED)
+                        .doOnSuccess(updateCount -> {
+                            if (updateCount > 0) {
+                                log.info("Transaction {} status updated to CANCELLED.", transactionId);
+                            } else {
+                                // Esto no debería ocurrir si findById tuvo éxito y la transacción existe.
+                                log.error("Failed to update status for transaction ID: {}. Update count was {}.", transactionId, updateCount);
+                                // Se podría lanzar una excepción específica aquí si updateCount es 0 después de un find exitoso.
+                            }
+                        })
+                    )
                     .doOnError(e -> log.error("Failed to update transaction status for transaction ID: {}", transactionId, e))
                     .thenReturn(historyRecord) // Devolvemos el registro de historial como confirmación
                     .onErrorResume(ex -> {
